@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Particle World is a frontier AI company developing world-class World Models."
+    />
+    <title>Particle World</title>
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+        --deep-field: #03040a;
+        --ink-black: #070a12;
+        --model-cyan: #62f2ff;
+        --signal-violet: #9d7cff;
+        --warm-reveal: #f3c77b;
+        --text-primary: #f7fbff;
+        --text-muted: #8c98ad;
+        --border-soft: rgba(247, 251, 255, 0.14);
+        --glass: rgba(7, 10, 18, 0.58);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+        background: var(--deep-field);
+        color: var(--text-primary);
+        font-family: Inter, "SF Pro Display", "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+
+      .site-shell {
+        position: relative;
+        min-height: 100svh;
+        overflow: hidden;
+        isolation: isolate;
+        background:
+          radial-gradient(circle at 78% 24%, rgba(98, 242, 255, 0.15), transparent 30rem),
+          radial-gradient(circle at 30% 78%, rgba(243, 199, 123, 0.1), transparent 24rem),
+          linear-gradient(145deg, #03040a 0%, #070a12 44%, #050616 100%);
+      }
+
+      .world-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.96;
+      }
+
+      .field-scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(3, 4, 10, 0.9) 0%, rgba(3, 4, 10, 0.32) 45%, rgba(3, 4, 10, 0.08) 100%),
+          linear-gradient(180deg, rgba(3, 4, 10, 0.18) 0%, rgba(3, 4, 10, 0.62) 100%);
+      }
+
+      .precision-frame {
+        position: absolute;
+        inset: clamp(14px, 2vw, 28px);
+        z-index: 2;
+        border: 1px solid var(--border-soft);
+        pointer-events: none;
+      }
+
+      .precision-frame::before,
+      .precision-frame::after {
+        position: absolute;
+        width: 72px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--model-cyan), transparent);
+        content: "";
+      }
+
+      .precision-frame::before {
+        top: -1px;
+        left: 28px;
+      }
+
+      .precision-frame::after {
+        right: 28px;
+        bottom: -1px;
+        transform: rotate(180deg);
+      }
+
+      .scene-content {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 100svh;
+        min-height: 640px;
+        padding: clamp(24px, 5vw, 72px);
+        gap: clamp(18px, 4vh, 42px);
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 44px;
+        color: var(--text-muted);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: clamp(0.68rem, 1.1vw, 0.82rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .mark {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-primary);
+      }
+
+      .mark-glyph {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border: 1px solid rgba(98, 242, 255, 0.72);
+        border-radius: 50%;
+        box-shadow: 0 0 22px rgba(98, 242, 255, 0.34);
+      }
+
+      .mark-glyph::before,
+      .mark-glyph::after {
+        position: absolute;
+        inset: 50% auto auto 50%;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--warm-reveal);
+        box-shadow: 0 0 16px rgba(243, 199, 123, 0.74);
+        content: "";
+        transform: translate(-50%, -50%);
+      }
+
+      .mark-glyph::after {
+        width: 26px;
+        height: 1px;
+        border-radius: 0;
+        background: rgba(157, 124, 255, 0.7);
+        box-shadow: none;
+        transform: translate(-50%, -50%) rotate(-28deg);
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        text-align: right;
+      }
+
+      .status::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--model-cyan);
+        box-shadow: 0 0 16px rgba(98, 242, 255, 0.86);
+        content: "";
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(220px, 360px);
+        align-items: end;
+        gap: clamp(24px, 5vw, 72px);
+        width: 100%;
+      }
+
+      .hero-copy {
+        display: flex;
+        flex-direction: column;
+        max-width: 980px;
+        gap: clamp(18px, 3vw, 30px);
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--warm-reveal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: clamp(0.72rem, 1vw, 0.88rem);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 42px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--warm-reveal), transparent);
+        content: "";
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 12ch;
+        font-size: clamp(4.2rem, 10.8vw, 9.8rem);
+        font-weight: 650;
+        line-height: 0.82;
+        letter-spacing: 0;
+        text-wrap: balance;
+      }
+
+      .reveal {
+        display: inline-flex;
+        width: fit-content;
+        max-width: 100%;
+        padding: 12px 16px 11px;
+        border: 1px solid rgba(243, 199, 123, 0.36);
+        background: rgba(243, 199, 123, 0.08);
+        color: var(--warm-reveal);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: clamp(0.82rem, 1.6vw, 1.04rem);
+        letter-spacing: 0.1em;
+        line-height: 1;
+        text-transform: uppercase;
+        box-shadow: 0 0 42px rgba(243, 199, 123, 0.08);
+      }
+
+      .descriptor {
+        max-width: 620px;
+        margin: 0;
+        color: rgba(247, 251, 255, 0.76);
+        font-size: clamp(1.05rem, 2vw, 1.45rem);
+        font-weight: 400;
+        line-height: 1.45;
+      }
+
+      .model-panel {
+        display: grid;
+        gap: 18px;
+        align-self: end;
+        width: 100%;
+        min-height: 240px;
+        height: min(46vh, 390px);
+        padding: 20px;
+        border: 1px solid var(--border-soft);
+        background: var(--glass);
+        backdrop-filter: blur(18px);
+      }
+
+      .panel-header,
+      .metric-row,
+      .system-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        color: var(--text-muted);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        line-height: 1.4;
+        text-transform: uppercase;
+      }
+
+      .panel-header span:last-child,
+      .metric-row span:last-child {
+        color: var(--text-primary);
+      }
+
+      .model-diagram {
+        position: relative;
+        min-height: 128px;
+        overflow: hidden;
+        border: 1px solid rgba(247, 251, 255, 0.1);
+        background:
+          linear-gradient(rgba(98, 242, 255, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(98, 242, 255, 0.08) 1px, transparent 1px),
+          rgba(3, 4, 10, 0.36);
+        background-size: 22px 22px;
+      }
+
+      .model-diagram::before,
+      .model-diagram::after {
+        position: absolute;
+        inset: 18%;
+        border: 1px solid rgba(98, 242, 255, 0.46);
+        border-radius: 50%;
+        box-shadow:
+          0 0 32px rgba(98, 242, 255, 0.18),
+          inset 0 0 28px rgba(157, 124, 255, 0.14);
+        content: "";
+      }
+
+      .model-diagram::after {
+        inset: 32% 22%;
+        border-color: rgba(243, 199, 123, 0.36);
+        transform: rotate(-14deg);
+      }
+
+      .vector-line {
+        position: absolute;
+        left: 14%;
+        right: 14%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--model-cyan), var(--signal-violet), transparent);
+        box-shadow: 0 0 18px rgba(98, 242, 255, 0.5);
+      }
+
+      .vector-line:nth-child(1) {
+        top: 28%;
+      }
+
+      .vector-line:nth-child(2) {
+        top: 52%;
+        transform: scaleX(0.8);
+      }
+
+      .vector-line:nth-child(3) {
+        top: 72%;
+        transform: scaleX(0.58);
+      }
+
+      .bottom-index {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        width: min(760px, 100%);
+        color: var(--text-muted);
+        font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .index-cell {
+        min-height: 58px;
+        padding: 14px;
+        border-top: 1px solid rgba(247, 251, 255, 0.18);
+      }
+
+      .index-cell strong {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--text-primary);
+        font-size: 0.84rem;
+        font-weight: 500;
+      }
+
+      .scanline {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        opacity: 0.34;
+        background: linear-gradient(180deg, transparent 0%, rgba(98, 242, 255, 0.05) 50%, transparent 100%);
+        background-size: 100% 9px;
+        mix-blend-mode: screen;
+      }
+
+      .js .reveal-target {
+        opacity: 0;
+      }
+
+      @media (max-width: 860px) {
+        .scene-content {
+          height: auto;
+          gap: 34px;
+          padding: 24px;
+        }
+
+        .topline {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .status {
+          text-align: left;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          align-items: start;
+        }
+
+        h1 {
+          font-size: clamp(4rem, 20vw, 7.5rem);
+        }
+
+        .model-panel {
+          height: auto;
+          min-height: 220px;
+        }
+
+        .bottom-index {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .scene-content {
+          padding: 20px;
+        }
+
+        .precision-frame {
+          inset: 10px;
+        }
+
+        h1 {
+          font-size: clamp(3.35rem, 18vw, 5.3rem);
+        }
+
+        .reveal {
+          width: 100%;
+          justify-content: center;
+          white-space: normal;
+          text-align: center;
+          line-height: 1.25;
+        }
+
+        .descriptor {
+          font-size: 1rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+        }
+
+        .js .reveal-target {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="site-shell" data-composition-id="particle-world-front" data-width="1920" data-height="1080">
+      <canvas class="world-canvas" id="worldCanvas" aria-hidden="true"></canvas>
+      <div class="field-scrim" aria-hidden="true"></div>
+      <div class="precision-frame" aria-hidden="true"></div>
+      <section class="scene-content" aria-label="Particle World">
+        <header class="topline reveal-target">
+          <div class="mark" aria-label="Particle World">
+            <span class="mark-glyph" aria-hidden="true"></span>
+            <span>Particle World</span>
+          </div>
+          <div class="status">World Model Systems</div>
+        </header>
+
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow reveal-target">Frontier AI</div>
+            <h1 class="reveal-target">Particle World</h1>
+            <div class="reveal reveal-target">To Be Revealed</div>
+            <p class="descriptor reveal-target">
+              Developing world-class World Models for the next generation of intelligence.
+            </p>
+          </div>
+
+          <aside class="model-panel reveal-target" aria-label="Model state preview">
+            <div class="panel-header">
+              <span>Latent World</span>
+              <span>PW-00</span>
+            </div>
+            <div class="model-diagram" aria-hidden="true">
+              <span class="vector-line"></span>
+              <span class="vector-line"></span>
+              <span class="vector-line"></span>
+            </div>
+            <div class="metric-row">
+              <span>Signal</span>
+              <span>Active</span>
+            </div>
+            <div class="metric-row">
+              <span>Disclosure</span>
+              <span>Pending</span>
+            </div>
+          </aside>
+        </div>
+
+        <footer class="bottom-index reveal-target" aria-label="Research focus">
+          <div class="index-cell">
+            <strong>Simulation</strong>
+            Learned dynamics
+          </div>
+          <div class="index-cell">
+            <strong>Prediction</strong>
+            State evolution
+          </div>
+          <div class="index-cell">
+            <strong>Control</strong>
+            Embodied futures
+          </div>
+        </footer>
+      </section>
+      <div class="scanline" aria-hidden="true"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      const canvas = document.getElementById("worldCanvas");
+      const context = canvas.getContext("2d");
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const state = {
+        width: 0,
+        height: 0,
+        dpr: 1,
+        frame: 0,
+        particles: [],
+        rings: [],
+      };
+
+      function mulberry32(seed) {
+        let value = seed;
+        return function next() {
+          value += 0x6d2b79f5;
+          let mixed = value;
+          mixed = Math.imul(mixed ^ (mixed >>> 15), mixed | 1);
+          mixed ^= mixed + Math.imul(mixed ^ (mixed >>> 7), mixed | 61);
+          return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function buildField() {
+        const random = mulberry32(29121988);
+        const particleCount = Math.min(240, Math.max(120, Math.floor((state.width * state.height) / 9000)));
+        state.particles = Array.from({ length: particleCount }, function createParticle(_, index) {
+          return {
+            x: random(),
+            y: random(),
+            z: 0.35 + random() * 1.4,
+            orbit: random() * Math.PI * 2,
+            drift: 0.32 + random() * 0.92,
+            size: 0.6 + random() * 1.8,
+            phase: index * 0.071,
+          };
+        });
+        state.rings = Array.from({ length: 7 }, function createRing(_, index) {
+          return {
+            radius: 0.16 + index * 0.052,
+            tilt: -0.68 + index * 0.17,
+            phase: index * 0.43,
+            weight: index % 2 === 0 ? 1 : 0.55,
+          };
+        });
+      }
+
+      function resizeCanvas() {
+        state.width = canvas.clientWidth;
+        state.height = canvas.clientHeight;
+        state.dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(state.width * state.dpr);
+        canvas.height = Math.floor(state.height * state.dpr);
+        context.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        buildField();
+      }
+
+      function drawGrid(centerX, centerY, tick) {
+        const spacing = Math.max(34, Math.min(58, state.width / 26));
+        context.save();
+        context.translate(centerX, centerY);
+        context.rotate(-0.18);
+        context.strokeStyle = "rgba(98, 242, 255, 0.075)";
+        context.lineWidth = 1;
+
+        for (let x = -state.width; x <= state.width; x += spacing) {
+          context.beginPath();
+          context.moveTo(x + Math.sin(tick * 0.01 + x * 0.005) * 10, -state.height);
+          context.lineTo(x - Math.sin(tick * 0.01 + x * 0.005) * 10, state.height);
+          context.stroke();
+        }
+
+        for (let y = -state.height; y <= state.height; y += spacing) {
+          context.beginPath();
+          context.moveTo(-state.width, y + Math.cos(tick * 0.012 + y * 0.004) * 8);
+          context.lineTo(state.width, y - Math.cos(tick * 0.012 + y * 0.004) * 8);
+          context.stroke();
+        }
+
+        context.restore();
+      }
+
+      function drawWorld(centerX, centerY, radius, tick) {
+        context.save();
+        context.translate(centerX, centerY);
+
+        const coreGradient = context.createRadialGradient(0, 0, radius * 0.1, 0, 0, radius * 1.12);
+        coreGradient.addColorStop(0, "rgba(98, 242, 255, 0.18)");
+        coreGradient.addColorStop(0.38, "rgba(157, 124, 255, 0.08)");
+        coreGradient.addColorStop(1, "rgba(3, 4, 10, 0)");
+        context.fillStyle = coreGradient;
+        context.beginPath();
+        context.arc(0, 0, radius * 1.14, 0, Math.PI * 2);
+        context.fill();
+
+        state.rings.forEach(function drawRing(ring) {
+          const pulse = Math.sin(tick * 0.018 + ring.phase) * 0.035;
+          context.save();
+          context.rotate(ring.tilt + Math.sin(tick * 0.006 + ring.phase) * 0.05);
+          context.scale(1, 0.36 + ring.weight * 0.18);
+          context.strokeStyle = ring.weight > 0.8 ? "rgba(98, 242, 255, 0.42)" : "rgba(157, 124, 255, 0.28)";
+          context.lineWidth = ring.weight;
+          context.beginPath();
+          context.arc(0, 0, radius * (ring.radius + 0.62 + pulse), 0, Math.PI * 2);
+          context.stroke();
+          context.restore();
+        });
+
+        for (let line = 0; line < 9; line += 1) {
+          const offset = -radius * 0.52 + line * radius * 0.13;
+          context.strokeStyle = line === 4 ? "rgba(243, 199, 123, 0.34)" : "rgba(98, 242, 255, 0.2)";
+          context.lineWidth = line === 4 ? 1.4 : 0.8;
+          context.beginPath();
+          for (let step = -48; step <= 48; step += 1) {
+            const x = (step / 48) * radius * 0.72;
+            const wave = Math.sin(step * 0.16 + tick * 0.024 + line) * radius * 0.018;
+            const y = offset + wave;
+            if (step === -48) {
+              context.moveTo(x, y);
+            } else {
+              context.lineTo(x, y);
+            }
+          }
+          context.stroke();
+        }
+
+        context.restore();
+      }
+
+      function drawParticles(tick) {
+        state.particles.forEach(function drawParticle(particle, index) {
+          const flow = tick * 0.0025 * particle.drift;
+          const waveX = Math.sin(flow * 2.8 + particle.phase) * 0.035;
+          const waveY = Math.cos(flow * 2 + particle.phase) * 0.028;
+          const x = (particle.x + waveX + flow * 0.05) % 1;
+          const y = (particle.y + waveY + Math.sin(flow + particle.orbit) * 0.01) % 1;
+          const screenX = x * state.width;
+          const screenY = y * state.height;
+          const alpha = 0.12 + Math.sin(tick * 0.024 + particle.phase) * 0.08 + particle.z * 0.06;
+          const size = particle.size * particle.z;
+
+          context.fillStyle = index % 5 === 0
+            ? "rgba(243, 199, 123, " + alpha + ")"
+            : "rgba(98, 242, 255, " + alpha + ")";
+          context.beginPath();
+          context.arc(screenX, screenY, size, 0, Math.PI * 2);
+          context.fill();
+
+          if (index % 11 === 0) {
+            context.strokeStyle = "rgba(98, 242, 255, 0.08)";
+            context.lineWidth = 1;
+            context.beginPath();
+            context.moveTo(screenX, screenY);
+            context.lineTo(screenX + Math.sin(particle.phase) * 52, screenY + Math.cos(particle.phase) * 52);
+            context.stroke();
+          }
+        });
+      }
+
+      function drawFrame() {
+        const tick = state.frame;
+        context.clearRect(0, 0, state.width, state.height);
+        context.fillStyle = "#03040a";
+        context.fillRect(0, 0, state.width, state.height);
+
+        const centerX = state.width * 0.68;
+        const centerY = state.height * 0.48;
+        const radius = Math.min(state.width, state.height) * 0.46;
+
+        drawGrid(centerX, centerY, tick);
+        drawParticles(tick);
+        drawWorld(centerX, centerY, radius, tick);
+
+        state.frame += prefersReducedMotion ? 0 : 1;
+        if (!prefersReducedMotion) {
+          window.requestAnimationFrame(drawFrame);
+        }
+      }
+
+      function initTimeline() {
+        const targets = document.querySelectorAll(".reveal-target");
+        window.__timelines = window.__timelines || {};
+
+        function fallbackPlay() {
+          targets.forEach(function animateTarget(target, index) {
+            target.style.opacity = "0";
+            target.style.transform = "translateY(" + (index === 0 ? "-12px" : "18px") + ")";
+
+            if (target.animate && !prefersReducedMotion) {
+              const animation = target.animate(
+                [
+                  { opacity: 0, transform: "translateY(" + (index === 0 ? "-12px" : "18px") + ")" },
+                  { opacity: 1, transform: "translateY(0)" },
+                ],
+                {
+                  delay: 80 + index * 120,
+                  duration: 620,
+                  easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+                  fill: "forwards",
+                }
+              );
+              animation.addEventListener("finish", function finalizeFallback() {
+                target.style.opacity = "1";
+                target.style.transform = "translateY(0)";
+              });
+            } else {
+              target.style.opacity = "1";
+              target.style.transform = "translateY(0)";
+            }
+          });
+        }
+
+        if (!window.gsap || prefersReducedMotion) {
+          window.__timelines["particle-world-front"] = { play: fallbackPlay };
+          fallbackPlay();
+          return;
+        }
+
+        const timeline = window.gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+        timeline
+          .fromTo(".topline", { y: -16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.72 }, 0.05)
+          .fromTo(".eyebrow", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.58 }, 0.18)
+          .fromTo("h1", { y: 46, opacity: 0 }, { y: 0, opacity: 1, duration: 0.86 }, 0.32)
+          .fromTo(".reveal", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, 0.58)
+          .fromTo(".descriptor", { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.68 }, 0.76)
+          .fromTo(".model-panel", { x: 34, opacity: 0 }, { x: 0, opacity: 1, duration: 0.76 }, 0.54)
+          .fromTo(".bottom-index", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.68 }, 0.98)
+          .fromTo(".vector-line", { scaleX: 0, transformOrigin: "50% 50%" }, { scaleX: 1, duration: 0.72, stagger: 0.12 }, 1.08);
+
+        window.__timelines["particle-world-front"] = timeline;
+        timeline.play(0);
+      }
+
+      resizeCanvas();
+      drawFrame();
+      window.addEventListener("resize", resizeCanvas);
+
+      let timelineInitialized = false;
+      function startTimelineOnce() {
+        if (timelineInitialized) {
+          return;
+        }
+        timelineInitialized = true;
+        initTimeline();
+      }
+
+      startTimelineOnce();
+      document.addEventListener("DOMContentLoaded", startTimelineOnce);
+    </script>
+  </body>
+</html>
