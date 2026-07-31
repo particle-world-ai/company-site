@@ -1,30 +1,35 @@
-# Particle World Visual Identity
+# Particle World Website Identity
 
-## Style Prompt
-Particle World should feel like a frontier AI lab revealing an advanced world-model system before launch: cinematic, technical, precise, and high-end. The page uses a dark infinite-canvas atmosphere with deterministic particle fields, simulation grids, luminous state traces, and sparse typography. The visual system should imply worlds being learned, simulated, compressed, and reassembled without relying on literal stock imagery or generic sci-fi decoration.
+## Brand Direction
+Particle World is a physical AI company building deployable world-model systems. The website should feel rigorous, ambitious, and engineered: a black field, the official dimensional loop mark, controlled violet light, precise grids, and generous editorial typography. The visual language should connect abstract representation learning with real-world action rather than imitate generic science-fiction interfaces.
 
 ## Colors
-- Deep field: `#03040a`
-- Ink black: `#070a12`
-- Model cyan: `#62f2ff`
-- Signal violet: `#9d7cff`
-- Warm reveal: `#f3c77b`
-- Text primary: `#f7fbff`
-- Text muted: `#8c98ad`
+- Infinite black: `#030303`
+- Elevated black: `#0a0a0d`
+- Official violet: `#6b5bd6`
+- Signal violet: `#8b7cff`
+- Electric cyan: `#8ce8ff`
+- Primary text: `#f5f5f7`
+- Secondary text: `#a4a4ae`
+- Hairline: `rgba(255, 255, 255, 0.14)`
 
 ## Typography
-- Primary: `Inter`, `SF Pro Display`, `Segoe UI`, sans-serif
-- Technical accent: `IBM Plex Mono`, `SFMono-Regular`, `Consolas`, monospace
+- Chinese and Latin display: `Inter`, `PingFang SC`, `Microsoft YaHei`, sans-serif
+- Technical labels: `IBM Plex Mono`, `SFMono-Regular`, `Consolas`, monospace
+
+## Imagery
+- Use the supplied official Particle World logo assets as the primary brand signal.
+- Use the supplied particle-explosion composition as the full-bleed hero image.
+- Product and research sections may use code-native grids, state traces, and node diagrams as supporting visuals.
 
 ## Motion
-- Motion should be precise, quiet, and layered.
-- Hero copy enters as staged state changes, not bouncing UI.
-- Ambient movement should be deterministic and field-like.
-- Layout is static first; animation moves from hidden/offset states into final CSS positions.
+- Reveal content in short, calm stages as sections enter the viewport.
+- Keep the final layout defined in CSS; animation only changes opacity and transform.
+- Respect `prefers-reduced-motion` and keep all content available without animation.
 
-## What NOT to Do
-- Do not use generic blue-purple gradient blobs as the core visual.
-- Do not add fake product claims, team content, or roadmap details.
-- Do not make a marketing landing page with cards and feature sections.
-- Do not use playful, cartoon, or consumer-app styling.
-- Do not let text overlap the simulation canvas controls or viewport edges.
+## What Not To Do
+- Do not recolor or redraw the official logo.
+- Do not use generic purple blobs, stock robots, or fake dashboard metrics.
+- Do not hide the company name behind decorative visuals.
+- Do not present long company copy as an uninterrupted wall of text.
+- Do not invent customer names, deployment claims, addresses, or phone numbers.
