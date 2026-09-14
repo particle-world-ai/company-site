@@ -1,0 +1,25 @@
+/* Locally hosted subsets. Regenerate with scripts/build-fonts.py after copy changes. */
+
+@font-face {
+  font-family: "PW Noto Serif SC";
+  src: url("./noto-serif-sc.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PW Source Serif";
+  src: url("./source-serif.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PW IBM Plex Mono";
+  src: url("./ibm-plex-mono.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
