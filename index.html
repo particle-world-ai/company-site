@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="见微知界以多模态世界模型和 AI Agent 为核心，构建理解真实环境、预测行动后果并自主完成复杂任务的物理智能系统。">
   <meta name="theme-color" content="#fefefd">
-  <title>见微知界 Particle World — 理解世界，智能行动。</title>
+  <title>见微知界 Particle World — 让物理智能，无限延伸</title>
   <link rel="icon" type="image/png" href="assets/particleworld-mark.png">
   <link rel="stylesheet" href="assets/fonts/fonts.css">
-  <link rel="stylesheet" href="styles.css?v=20260914-nav">
-  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260914-fullscreen">
+  <script src="script.js?v=20260914-simplified" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-en="Skip to content">跳至正文</a>
@@ -23,7 +23,7 @@
       <a href="./" aria-current="page" data-en="Home">首页</a>
       <a href="updates/" data-en="Updates">动态</a>
     </nav>
-    <nav class="language-switch" aria-label="语言 / Language">
+    <nav class="language-switch" aria-label="语言 / Language" hidden>
       <button type="button" data-lang="zh" aria-pressed="true" lang="zh-CN">中文</button>
       <span aria-hidden="true">/</span>
       <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
@@ -33,51 +33,28 @@
 
   <main id="main" class="shell">
     <section class="hero" aria-labelledby="hero-title">
-      <p class="eyebrow">PHYSICAL AI · WORLD MODELS</p>
-      <h1 id="hero-title"><span data-en="Understand the World.">理解世界，</span><span data-en="Act with Intelligence.">智能行动。</span></h1>
-      <p class="hero-translation" lang="en" data-en="理解世界，智能行动。">Understand the World. Act with Intelligence.</p>
+      <h1 id="hero-title"><span data-en="Extending Physical Intelligence.">让物理智能，</span><span data-en="Indefinitely">无限延伸</span></h1>
+      <p class="hero-translation" lang="en" data-en="让物理智能，无限延伸">Extending Physical Intelligence. Indefinitely</p>
       <div class="hero-axis" aria-hidden="true"></div>
-      <p class="hero-note">A MORE INTELLIGENT PHYSICAL WORLD</p>
-      <div class="intro-links">
-        <a class="intro-link" href="#work">
-          <span class="micro">WORLD MODELS</span>
-          <span class="intro-caption" data-en="Learning from the real world">从真实世界中学习</span>
-        </a>
-        <a class="intro-link" href="#about">
-          <span class="micro">PHYSICAL AI</span>
-          <span class="intro-caption" data-en="Intelligence that acts in the physical world">让智能体在物理世界中行动</span>
-        </a>
-        <div class="intro-link">
-          <a class="micro" href="#join">JOIN US</a>
-          <a class="email-chip" href="mailto:info@particleworld.ai">info@particleworld.ai</a>
-        </div>
-      </div>
+      <nav class="intro-links section-links" aria-label="页面导航" data-label-en="Page navigation">
+        <a class="intro-link" href="#work" data-en="About us">了解我们</a>
+        <a class="intro-link" href="#vision" data-en="Our vision">我们的愿景</a>
+        <a class="intro-link" href="#join" data-en="Contact us">联系我们</a>
+      </nav>
     </section>
 
     <section class="editorial work" id="work" aria-labelledby="work-title">
       <div class="section-index" aria-hidden="true">01</div>
       <div class="section-content">
-        <h2 id="work-title" data-en="What we’re building">我们正在做什么</h2>
-        <p class="lead" data-en="Particle World is building physical intelligence systems powered by multimodal world models and AI agents, enabling machines to understand real environments, predict the consequences of their actions, and autonomously carry out complex tasks.">见微知界正在构建以多模态世界模型和 AI Agent 为核心的物理智能系统，让机器能够理解真实环境、预测行动后果，并自主完成复杂任务。</p>
-        <p class="secondary" data-en="Starting with high-quality multimodal data, on-device world models, Agent Harness, and closed-loop data pipelines, we are advancing physical AI from technical demonstrations to verifiable, deployable, and scalable applications.">我们从高质量多模态数据、端侧世界模型、Agent Harness 和数据闭环入手，推动物理 AI 从技术演示走向可验证、可部署和可规模化应用。</p>
-      </div>
-    </section>
-
-    <section class="editorial" id="about" aria-labelledby="about-title">
-      <div class="section-index" aria-hidden="true">02</div>
-      <div class="section-content">
-        <div class="section-heading"><h2 id="about-title" data-en="About Particle World">公司简介</h2><span class="micro section-caption" aria-hidden="true">ABOUT US</span></div>
-        <p class="lead" data-en="We are a physical AI company built around world models and AI agents. We are developing the infrastructure that brings intelligence to real-world hardware, enabling machines to understand their surroundings, predict the possible outcomes of their actions, and learn and evolve through continuous interaction.">我们是一家以世界模型和 AI Agent 为核心的物理 AI 公司，致力于构建真实世界中硬件智能化的基础设施。让机器能够理解真实环境、预测行动可能带来的结果，并在持续交互中学习和进化。</p>
-        <div class="prose">
-          <p data-en="For intelligent vehicles, robots, and other smart hardware, we start with high-quality multimodal data and explore latent-space world models that can run efficiently on-device. Through Agent Harness, simulation-based validation, and closed-loop data pipelines, we translate model capabilities into reliable, controllable systems that improve continuously. Compared with approaches primarily based on visual recognition and action imitation, we focus on machines’ understanding of spatial structure, physical properties, contact states, and causal relationships, seeking to address generalization, long-horizon planning, and safety in real-world deployment.">面向智能汽车、机器人及其他智能硬件，公司从高质量多模态数据出发，探索可在端侧高效运行的隐空间世界模型，并通过 Agent Harness、仿真验证和数据闭环，将模型能力转化为稳定、可控、可持续迭代的系统能力。相较于主要依靠视觉识别和动作模仿的技术路线，见微更关注机器对空间结构、物理属性、接触状态和因果关系的理解，希望解决真实部署中的环境泛化、长程规划与安全问题。</p>
-          <p data-en="Our team brings together frontier academic research, large-scale AI systems engineering, and production experience in intelligent driving. Our core members have worked extensively in world models, multimodal learning, reinforcement learning, physical modeling, cloud systems, and edge computing. Their experience includes delivering intelligent driving systems at the million-unit scale and building large-scale closed-loop data pipelines. We also collaborate with industry partners and academic institutions to accelerate the validation of research in real-world settings.">见微的团队汇集了前沿学术研究、大规模 AI 系统工程和智能驾驶量产经验。核心成员长期从事世界模型、多模态学习、强化学习、物理建模、云端系统与边缘计算，并拥有百万级智能驾驶系统交付和大规模数据闭环经验。公司同时与产业伙伴和学术机构开展协作，加快研究成果在真实场景中的验证。</p>
-          <p data-en="Our long-term goal is to build a unified intelligence core across different hardware platforms and applications. We want intelligent systems to move beyond executing predefined instructions toward understanding environments, planning actions, and autonomously completing complex tasks—providing continuously evolving intelligence for machines in the real world.">我们的长期目标，是构建面向不同硬件与应用场景的统一智能中枢，让智能系统从执行预设指令，走向理解环境、规划行动和自主完成复杂任务，为真实世界中的机器提供持续进化的智能基础。</p>
-        </div>
+        <h2 id="work-title" data-en="About us">了解我们</h2>
+        <p class="lead" data-en="Particle World is a physical AI company centered on world models and AI agents, dedicated to becoming the infrastructure that brings intelligence to real-world hardware.">见微知界是一家以世界模型和 AI Agent 为核心的物理 AI 公司，致力于成为真实世界中硬件智能化的基础设施。</p>
+        <p class="secondary" data-en="Starting with high-quality multimodal data, we develop latent-space world models that run efficiently on-device. Combined with Agent Harness, simulation-based validation, and closed-loop data pipelines, they enable machines to understand real environments, predict the consequences of actions, and learn and evolve through continuous interaction.">从高质量多模态数据出发，研发可在端侧高效运行的隐空间世界模型，并结合 Agent Harness、仿真验证与数据闭环，让机器理解真实环境、预测行动后果，在持续交互中学习和进化。</p>
+        <p class="secondary" data-en="Particle World is building a unified intelligence core across hardware platforms and applications, advancing machines from executing predefined instructions to autonomous understanding, planning, and action—and moving physical AI from technical demonstrations to verifiable, deployable, and scalable applications.">见微知界正在构建面向不同硬件和应用场景的统一智能中枢，推动机器从执行预设指令走向自主理解、规划和行动，让物理 AI 从技术演示走向可验证、可部署和可规模化应用。</p>
       </div>
     </section>
 
     <section class="editorial vision" id="vision" aria-labelledby="vision-title">
-      <div class="section-index" aria-hidden="true">03</div>
+      <div class="section-index" aria-hidden="true">02</div>
       <div class="section-content">
         <div class="section-heading"><h2 id="vision-title" data-en="Our vision">我们的愿景</h2><span class="micro section-caption" aria-hidden="true">OUR VISION</span></div>
         <p class="secondary vision-intro" data-en="To bring intelligence to hardware through AI and extend the boundaries of human intelligence:">以 AI 技术驱动硬件智能化，推动人类智能边界的无限延伸：</p>
@@ -86,9 +63,9 @@
     </section>
 
     <section class="editorial join" id="join" aria-labelledby="join-title">
-      <div class="section-index" aria-hidden="true">04</div>
+      <div class="section-index" aria-hidden="true">03</div>
       <div class="section-content">
-        <div class="section-heading"><h2 id="join-title" data-en="Build this future with us.">欢迎加入我们！</h2><span class="micro section-caption" aria-hidden="true">JOIN US</span></div>
+        <div class="section-heading"><h2 id="join-title" data-en="Contact us">联系我们</h2><span class="micro section-caption" aria-hidden="true">CONTACT US</span></div>
         <a class="contact-link" href="mailto:info@particleworld.ai">info@particleworld.ai</a>
       </div>
     </section>

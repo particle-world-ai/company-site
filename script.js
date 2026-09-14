@@ -1,4 +1,7 @@
 (() => {
+  // Enable after the English copy is approved. Translations remain in the HTML.
+  const englishEnabled = false;
+  document.querySelectorAll(".language-switch").forEach(nav => { nav.hidden = !englishEnabled; });
   const translated = Array.from(document.querySelectorAll('[data-en]'));
   const labels = Array.from(document.querySelectorAll('[data-label-en]'));
   const buttons = Array.from(document.querySelectorAll('[data-lang]'));
@@ -13,7 +16,7 @@
     en: 'Particle World builds physical intelligence systems powered by multimodal world models and AI agents, enabling machines to understand the world, predict outcomes, and act autonomously.'
   };
   function setLanguage(language) {
-    const lang = language === 'en' ? 'en' : 'zh';
+    const lang = englishEnabled && language === 'en' ? 'en' : 'zh';
     document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
     translated.forEach(element => { element.textContent = element.dataset[lang]; });
     labels.forEach(element => { element.setAttribute('aria-label', element.dataset[lang === 'en' ? 'labelEn' : 'labelZh']); });
@@ -22,7 +25,7 @@
     if (heroTranslation) heroTranslation.lang = lang === 'en' ? 'zh-CN' : 'en';
     document.title = isUpdates
       ? (lang === 'en' ? 'Updates — Particle World AI' : '动态 — 见微知界 Particle World')
-      : lang === 'en' ? 'Particle World — Understand the World. Act with Intelligence.' : '见微知界 Particle World — 理解世界，智能行动。';
+      : lang === 'en' ? 'Particle World — Extending Physical Intelligence. Indefinitely' : '见微知界 Particle World — 让物理智能，无限延伸';
     document.querySelector('meta[name="description"]').content = descriptions[lang];
     try { localStorage.setItem('particleworld-language', lang); } catch { /* Storage may be unavailable in private contexts. */ }
   }
