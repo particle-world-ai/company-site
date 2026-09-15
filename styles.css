@@ -25,6 +25,11 @@ a:hover { color: var(--violet); }
 .brand { display: inline-flex; align-items: center; gap: 0; margin-left: -12px; }
 .brand img { display: block; width: 64px; height: 64px; object-fit: contain; }
 .wordmark { font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 750; letter-spacing: -1.6px; color: #09090b; }
+/* Frame the supplied PNG's artwork, excluding its large white margins. */
+.site-header .brand { margin-left: 0; }
+.brand-art { position: relative; display: block; overflow: hidden; width: 160px; aspect-ratio: 4168 / 877; mix-blend-mode: multiply; }
+.site-header .brand .brand-art img { position: absolute; width: 191.93858%; height: auto; max-width: none; left: -42.65835%; top: -213.11288%; }
+@media (max-width: 700px) { .brand-art { width: 140px; } }
 .language-switch { display: flex; align-items: center; gap: 16px; font-family: var(--mono); font-size: 15px; color: var(--muted); }
 .language-switch button { border: 0; background: none; padding: 12px 3px; cursor: pointer; min-width: 32px; min-height: 44px; }
 .language-switch button[aria-pressed=true], .language-switch button:hover { color: var(--violet); }
