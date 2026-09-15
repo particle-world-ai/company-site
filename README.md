@@ -1,20 +1,33 @@
 # Particle World / 见微知界
 
-Bilingual company website. Static HTML, CSS and JavaScript; no build step or runtime dependencies.
+Bilingual company website built with Vite and vanilla HTML, CSS and JavaScript. The homepage and updates page are independent HTML entries, with shared styles and a bundled JavaScript module. No framework runtime is required.
 
 ## Local preview
 
 ```sh
-python3 -m http.server 8765 --bind 127.0.0.1
+npm ci
+npm run dev -- --port 8765
 ```
 
-Open http://localhost:8765. This project has not been deployed as part of the redesign.
+Use Node.js 22.12+ or 24+. Open http://localhost:8765 (Vite reports another port if it is already occupied). The updates page is at `/updates/`.
+
+## Production build and deployment
+
+```sh
+npm run build
+npm run preview
+```
+
+`dist/` contains the complete production website, including both pages, bundled CSS and JavaScript, fonts, logo, font licenses, `CNAME`, and `.nojekyll`. Only referenced visual assets are bundled. Preview serves this production build locally; it does not publish it.
+
+The GitHub Pages workflow installs dependencies with `npm ci`, builds the site, and uploads only `dist/`. Pushes to `main` or `gh-pages` trigger deployment, as does a manual workflow run. Relative asset URLs support the existing custom domain and GitHub Pages project paths. Do not publish the unbuilt source directory.
 
 ## Editing
 
 - `index.html`: Chinese content and matching `data-en` translations.
 - `styles.css`: responsive layout and visual tokens.
 - `script.js`: language switching, preference persistence, metadata and year.
+- `vite.config.js`: two HTML build entries, relative asset paths and distribution metadata.
 - `assets/particleworld-mark.png`: original unchanged logo mark.
 - `assets/fonts/`: locally hosted font subsets and their SIL Open Font Licenses.
 - `DESIGN.md`: selected design and implementation decisions.
@@ -34,7 +47,7 @@ python3 -m venv .font-venv
 
 This downloads original open-source fonts from the Google Fonts repository into a temporary cache, preserves license files, and writes renamed WOFF2 subsets. Redistribution licenses are in `assets/fonts/OFL-*.txt`.
 
-Language defaults to Chinese and is saved in local storage. Without JavaScript the full Chinese page and navigation links remain available.
+English is currently disabled via `englishEnabled` in `script.js`; all translations remain in the HTML for later review. Chinese is saved in local storage. Without JavaScript the full Chinese page and navigation links remain available.
 
 ## Updates
 
